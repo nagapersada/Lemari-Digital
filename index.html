@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lemari Buku Digital">
+<meta name="application-name" content="Lemari Buku Digital">
+<meta name="msapplication-TileColor" content="#0b0906">
+<meta name="theme-color" content="#0b0906">
+<meta name="description" content="Lemari Buku Digital - Khazanah Ilmu & Pustaka Tautan Pilihan oleh Deka Sonjaya • Modern Spiritual.">
+<title>Lemari Buku Digital</title>
+<link id="pwaManifest" rel="manifest" href="">
+<link id="appleTouchIcon" rel="apple-touch-icon" sizes="180x180" href="">
+<link id="appFavicon" rel="icon" type="image/png" sizes="192x192" href="">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg-deep:#080705;
+  --bg-dark:#110e0a;
+  --bg-elev:#18140e;
+  --bg-card:linear-gradient(165deg, rgba(36,30,21,.92) 0%, rgba(19,16,11,.96) 100%);
+  --ink:#f5efe2;
+  --muted:#a99d86;
+  --gold:#c9a86a;
+  --gold2:#eddcb4;
+  --gold-bright:#f6e7c1;
+  --line:rgba(201,168,106,.28);
+  --line-strong:rgba(201,168,106,.55);
+  --emerald:#1a5c3d;
+  --radius:18px;
+  --safe-t:env(safe-area-inset-top, 0px);
+  --safe-r:env(safe-area-inset-right, 0px);
+  --safe-b:env(safe-area-inset-bottom, 0px);
+  --safe-l:env(safe-area-inset-left, 0px);
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  min-height:100dvh;
+  overflow-x:hidden;
+}
+html:fullscreen,html:-webkit-full-screen{
+  width:100vw;
+  height:100vh;
+  height:100dvh;
+}
+body{
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg-deep);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+button{font-family:inherit;border:none;cursor:pointer;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+input,select,textarea{font-family:inherit}
+
+/* =========================================================
+   1. HALAMAN PEMBUKA (ROYAL SAMPUL)
+   ========================================================= */
+#splash{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100dvh;
+  z-index:100;
+  background:
+    radial-gradient(ellipse 85% 55% at 50% 0%, rgba(84,65,33,.52) 0%, transparent 72%),
+    radial-gradient(circle at 50% 100%, rgba(42,32,17,.45) 0%, transparent 65%),
+    linear-gradient(180deg, #16120c 0%, #0b0906 55%, #060503 100%);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:center;
+  padding:calc(18px + var(--safe-t)) calc(22px + var(--safe-r)) calc(22px + var(--safe-b)) calc(22px + var(--safe-l));
+  text-align:center;
+  overflow:hidden;
+  transition:opacity .4s ease, transform .4s ease;
+}
+#splash:before{
+  content:"";
+  position:fixed;
+  top:calc(10px + var(--safe-t));
+  right:calc(10px + var(--safe-r));
+  bottom:calc(10px + var(--safe-b));
+  left:calc(10px + var(--safe-l));
+  border:1px solid var(--line);
+  border-radius:16px;
+  pointer-events:none;
+  box-shadow:inset 0 0 60px rgba(0,0,0,.6);
+}
+#splash:after{
+  content:"";
+  position:fixed;
+  top:calc(15px + var(--safe-t));
+  right:calc(15px + var(--safe-r));
+  bottom:calc(15px + var(--safe-b));
+  left:calc(15px + var(--safe-l));
+  border:1px solid rgba(201,168,106,.12);
+  border-radius:12px;
+  pointer-events:none;
+}
+#splash.hide{
+  opacity:0;
+  pointer-events:none;
+  transform:scale(1.015);
+}
+
+.splashTop{
+  width:100%;
+  max-width:860px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:6px 8px 0;
+  z-index:2;
+  flex-shrink:0;
+}
+.splashBrand{
+  font-size:10px;
+  letter-spacing:.28em;
+  color:var(--gold);
+  text-align:left;
+  line-height:1.45;
+}
+.splashBrand b{
+  display:block;
+  font-size:11px;
+  letter-spacing:.22em;
+  color:var(--gold-bright);
+}
+.splashTools{display:flex;gap:8px;align-items:center}
+.iconBtn{
+  width:40px;
+  height:40px;
+  min-width:40px;
+  border-radius:50%;
+  border:1px solid var(--line-strong);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  color:var(--gold2);
+  background:rgba(201,168,106,.07);
+  backdrop-filter:blur(6px);
+  transition:transform .16s ease, background .2s ease, border-color .2s ease;
+}
+.iconBtn:hover{border-color:var(--gold-bright);background:rgba(201,168,106,.2)}
+.iconBtn:active{transform:scale(.94)}
+.iconBtn.playing{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#120e08;border-color:var(--gold-bright);box-shadow:0 0 20px rgba(201,168,106,.5)}
+
+.splashCenter{
+  width:100%;
+  max-width:540px;
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:10px 8px;
+  z-index:2;
+}
+.splashLogoWrap{
+  position:relative;
+  width:clamp(118px, 28vw, 162px);
+  height:clamp(118px, 28vw, 162px);
+  border-radius:50%;
+  border:1.5px solid var(--gold);
+  box-shadow:0 0 0 7px rgba(201,168,106,.09), 0 0 40px rgba(201,168,106,.18), 0 20px 45px rgba(0,0,0,.65);
+  background:radial-gradient(circle at 50% 35%, #3a2d18, #12100c);
+  overflow:hidden;
+  flex-shrink:0;
+}
+.splashLogo{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  position:relative;
+  z-index:2;
+}
+.splashLogoFallback{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  color:var(--gold2);
+}
+
+.splashKicker{
+  margin-top:22px;
+  font-size:10.5px;
+  letter-spacing:.34em;
+  color:var(--gold);
+  font-weight:600;
+}
+.splashTitle{
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:400;
+  font-size:clamp(28px, 6.8vw, 44px);
+  line-height:1.15;
+  margin-top:10px;
+  letter-spacing:-.01em;
+  color:#fff;
+}
+.splashTitle b{color:var(--gold2);font-weight:400}
+.splashDivider{
+  width:64px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold2),transparent);
+  margin:16px auto;
+}
+.splashSub{
+  font-size:clamp(13.5px, 3.5vw, 15px);
+  line-height:1.68;
+  color:#d4c7ae;
+  max-width:440px;
+  margin:0 auto;
+}
+.btnMasuk{
+  width:100%;
+  max-width:360px;
+  background:linear-gradient(180deg,#f2e2bc 0%, #c9a86a 100%);
+  color:#120e08;
+  font-weight:800;
+  font-size:15px;
+  letter-spacing:.03em;
+  padding:15px 26px;
+  border-radius:999px;
+  margin-top:24px;
+  box-shadow:0 10px 30px rgba(201,168,106,.32), inset 0 1px 0 rgba(255,255,255,.5);
+  transition:transform .16s ease, filter .2s ease, box-shadow .2s ease;
+}
+.btnMasuk:hover{filter:brightness(1.06);box-shadow:0 12px 34px rgba(201,168,106,.42)}
+.btnMasuk:active{transform:scale(.98)}
+.splashAudioHint{
+  margin-top:12px;
+  font-size:11.5px;
+  color:#b6a98e;
+  letter-spacing:.02em;
+}
+.splashFooter{
+  font-size:10.5px;
+  letter-spacing:.24em;
+  color:#9c8f76;
+  padding-bottom:4px;
+  z-index:2;
+  flex-shrink:0;
+}
+.splashFooter b{color:var(--gold2);font-weight:600}
+
+/* =========================================================
+   2. HALAMAN UTAMA (LUXURY DARK OBSIDIAN & GOLD GALLERY)
+   ========================================================= */
+#app{
+  display:none;
+  min-height:100dvh;
+  flex-direction:column;
+  background:
+    radial-gradient(ellipse 90% 45% at 50% 0%, rgba(64,50,27,.42) 0%, transparent 70%),
+    radial-gradient(circle at 100% 100%, rgba(36,28,16,.35) 0%, transparent 60%),
+    linear-gradient(180deg, #120f0b 0%, #090806 100%);
+}
+#app.show{display:flex}
+
+.appHeader{
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:rgba(14,12,9,.88);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);
+  box-shadow:0 8px 30px rgba(0,0,0,.45);
+  padding:calc(12px + var(--safe-t)) calc(18px + var(--safe-r)) 12px calc(18px + var(--safe-l));
+}
+.headerInner{
+  max-width:1160px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.headerLogo{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1.5px solid var(--gold);
+  box-shadow:0 0 14px rgba(201,168,106,.25);
+  flex-shrink:0;
+  background:#12100c;
+  cursor:pointer;
+}
+.headerTitle{flex:1;min-width:0;line-height:1.25}
+.headerTitle b{
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:400;
+  font-size:17.5px;
+  color:var(--gold-bright);
+  letter-spacing:.01em;
+  display:block;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.headerTitle span{
+  font-size:9.5px;
+  letter-spacing:.22em;
+  color:var(--gold);
+  display:block;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  margin-top:1px;
+}
+.headerStat{
+  background:rgba(201,168,106,.09);
+  border:1px solid var(--line);
+  color:var(--ink);
+  font-size:11.5px;
+  font-weight:600;
+  padding:7px 13px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+.headerStat b{color:var(--gold2);font-weight:800}
+.headerIcon{
+  width:38px;
+  height:38px;
+  min-width:38px;
+  border-radius:50%;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  color:var(--gold2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+  transition:transform .15s ease, background .2s ease, border-color .2s ease;
+}
+.headerIcon:hover{border-color:var(--gold-bright);background:rgba(201,168,106,.16)}
+.headerIcon:active{transform:scale(.94)}
+.headerIcon.playing{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#120e08;border-color:var(--gold-bright);box-shadow:0 0 16px rgba(201,168,106,.4)}
+
+.main{
+  max-width:1160px;
+  width:100%;
+  margin:0 auto;
+  padding:20px calc(18px + var(--safe-r)) calc(28px + var(--safe-b)) calc(18px + var(--safe-l));
+  flex:1;
+}
+
+.heroBar{
+  background:linear-gradient(135deg, rgba(44,35,22,.72) 0%, rgba(20,17,12,.92) 100%);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:18px 20px;
+  margin-bottom:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  box-shadow:0 12px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(232,213,168,.12);
+}
+.heroBarText .eyebrow{
+  font-size:9.5px;
+  letter-spacing:.26em;
+  color:var(--gold);
+  font-weight:700;
+  text-transform:uppercase;
+}
+.heroBarText h2{
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:400;
+  font-size:clamp(18px, 3.6vw, 23px);
+  color:#fff;
+  margin-top:4px;
+  line-height:1.25;
+}
+.heroBarText h2 b{color:var(--gold2);font-weight:400}
+.heroBarText p{
+  font-size:12.5px;
+  color:var(--muted);
+  margin-top:4px;
+  line-height:1.55;
+}
+
+.toolbar{display:flex;gap:10px;align-items:center}
+.searchWrap{flex:1;position:relative}
+.searchWrap span{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.75;color:var(--gold2)}
+.searchWrap input{
+  width:100%;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:13px 18px 13px 40px;
+  font-size:14px;
+  color:#fff;
+  outline:none;
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.25);
+  transition:border-color .2s ease, background .2s ease;
+}
+.searchWrap input::placeholder{color:#8c806a}
+.searchWrap input:focus{border-color:var(--gold2);background:rgba(255,255,255,.08)}
+
+.btnAdd{
+  background:linear-gradient(180deg,#f2e2bc 0%, #c9a86a 100%);
+  color:#120e08;
+  font-weight:800;
+  padding:13px 20px;
+  border-radius:999px;
+  font-size:13px;
+  letter-spacing:.02em;
+  white-space:nowrap;
+  box-shadow:0 6px 20px rgba(201,168,106,.28), inset 0 1px 0 rgba(255,255,255,.45);
+  transition:transform .15s ease, filter .2s ease;
+}
+.btnAdd:hover{filter:brightness(1.06)}
+.btnAdd:active{transform:scale(.97)}
+
+.chips{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:14px 2px 4px;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex-shrink:0;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
+  color:#ded4bf;
+  padding:8px 15px;
+  border-radius:999px;
+  font-size:12.5px;
+  font-weight:600;
+  white-space:nowrap;
+  transition:all .2s ease;
+}
+.chip:hover{border-color:var(--gold);background:rgba(201,168,106,.1)}
+.chip.on{
+  background:linear-gradient(180deg,#eddcb4,#c9a86a);
+  color:#120e08;
+  border-color:var(--gold2);
+  font-weight:800;
+  box-shadow:0 4px 14px rgba(201,168,106,.25);
+}
+.chip small{opacity:.75;font-weight:700;margin-left:3px}
+
+.form{
+  background:linear-gradient(170deg, #1d1811 0%, #120f0a 100%);
+  border:1px solid var(--line-strong);
+  border-radius:20px;
+  padding:20px;
+  margin-top:14px;
+  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 1px 0 rgba(232,213,168,.15);
+  display:none;
+}
+.form.open{display:block;animation:fadeSlide .24s ease}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.form h3{font-family:Georgia,"Times New Roman",serif;font-size:20px;font-weight:400;color:var(--gold2)}
+.form p{font-size:13px;color:var(--muted);line-height:1.6;margin-top:4px}
+.form label{font-size:10px;letter-spacing:.16em;font-weight:700;color:var(--gold);margin-top:14px;display:block}
+.form input,.form select,.form textarea{
+  width:100%;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 14px;
+  font-size:14px;
+  color:#fff;
+  outline:none;
+  margin-top:6px;
+  transition:border-color .2s ease, background .2s ease;
+}
+.form input::placeholder,.form textarea::placeholder{color:#7c715c}
+.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--gold2);background:rgba(255,255,255,.09)}
+.form select option{background:#16120c;color:#fff}
+.form textarea{resize:vertical;min-height:60px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.formBtns{display:flex;gap:10px;margin-top:18px}
+.btnPrimary{
+  flex:1;
+  background:linear-gradient(180deg,#f2e2bc,#c9a86a);
+  color:#120e08;
+  font-weight:800;
+  padding:13px 18px;
+  border-radius:999px;
+  font-size:14px;
+  box-shadow:0 6px 20px rgba(201,168,106,.25);
+}
+.btnGhost{
+  padding:13px 20px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  font-weight:600;
+  font-size:14px;
+  color:#ded4bf;
+  background:rgba(255,255,255,.04);
+}
+.btnGhost:hover{border-color:var(--gold);color:#fff}
+
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 10px 28px rgba(0,0,0,.38), inset 0 1px 0 rgba(232,213,168,.09);
+  position:relative;
+  overflow:hidden;
+  min-width:0;
+  transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--line-strong);
+  box-shadow:0 16px 36px rgba(0,0,0,.5), 0 0 24px rgba(201,168,106,.08);
+}
+.card.pinned{
+  border-color:var(--gold);
+  background:linear-gradient(165deg, rgba(52,41,25,.92) 0%, rgba(21,17,11,.97) 100%);
+}
+.card.pinned:before{
+  content:"📌 DISEMATKAN";
+  position:absolute;
+  top:0;
+  right:0;
+  background:linear-gradient(180deg,#eddcb4,#c9a86a);
+  color:#120e08;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.1em;
+  padding:5px 11px;
+  border-radius:0 0 0 12px;
+}
+.cardTop{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.fav{
+  width:48px;
+  height:48px;
+  min-width:48px;
+  border-radius:14px;
+  background:linear-gradient(180deg, rgba(201,168,106,.16), rgba(201,168,106,.05));
+  border:1px solid var(--line-strong);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1);
+}
+.fav img{width:26px;height:26px;object-fit:contain;border-radius:4px}
+.fav span{font-size:22px}
+.card h3{
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:400;
+  font-size:16.5px;
+  line-height:1.35;
+  color:#fff;
+  word-break:break-word;
+}
+.card h3 a:hover{color:var(--gold2)}
+.domain{font-size:11px;color:var(--gold);opacity:.85;margin-top:3px;word-break:break-all}
+
+.badge{
+  display:inline-block;
+  margin-top:12px;
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:.04em;
+  padding:5px 11px;
+  border-radius:999px;
+  width:fit-content;
+  max-width:100%;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  border:1px solid transparent;
+}
+.badge.kitab{background:rgba(125,156,255,.12);color:#b8cbff;border-color:rgba(125,156,255,.28)}
+.badge.tauhid{background:rgba(72,199,132,.12);color:#98ecc0;border-color:rgba(72,199,132,.28)}
+.badge.esq{background:rgba(201,168,106,.15);color:var(--gold2);border-color:rgba(201,168,106,.35)}
+.badge.lain{background:rgba(255,255,255,.07);color:#d6ccb8;border-color:rgba(255,255,255,.16)}
+
+.desc{
+  font-size:13px;
+  color:#cfc3ab;
+  line-height:1.65;
+  margin-top:10px;
+  flex:1;
+  word-break:break-word;
+}
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:16px;
+  padding-top:12px;
+  border-top:1px solid rgba(201,168,106,.14);
+}
+.act{
+  flex:1;
+  padding:10px 10px;
+  border-radius:999px;
+  font-size:12.5px;
+  font-weight:700;
+  text-align:center;
+  white-space:nowrap;
+  transition:all .16s ease;
+}
+.act.open{
+  background:linear-gradient(180deg,#eddcb4,#c9a86a);
+  color:#120e08;
+  box-shadow:0 4px 14px rgba(201,168,106,.22);
+}
+.act.open:hover{filter:brightness(1.06)}
+.act.copy{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  color:#e8dec8;
+}
+.act.copy:hover{border-color:var(--gold2);background:rgba(201,168,106,.12)}
+.actIcon{
+  width:38px;
+  min-width:38px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(255,255,255,.04);
+  font-size:14px;
+  transition:all .16s ease;
+}
+.actIcon:hover{border-color:var(--gold2);background:rgba(201,168,106,.14)}
+
+.empty{
+  background:linear-gradient(170deg, rgba(30,25,18,.85), rgba(16,13,9,.95));
+  border:1px dashed var(--line-strong);
+  border-radius:20px;
+  padding:32px 20px;
+  text-align:center;
+  margin-top:16px;
+}
+.empty h3{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:21px;color:var(--gold2)}
+.empty p{font-size:13px;color:var(--muted);line-height:1.7;margin-top:8px}
+
+.footer{
+  max-width:1160px;
+  margin:24px auto 0;
+  padding:16px 14px 10px;
+  border-top:1px solid rgba(201,168,106,.15);
+  text-align:center;
+  font-size:11.5px;
+  color:var(--muted);
+  line-height:1.75;
+}
+.footer b{color:var(--gold2);font-weight:600}
+
+/* MODAL PANDUAN INSTALL PWA */
+.installModal{
+  position:fixed;
+  inset:0;
+  z-index:250;
+  background:rgba(6,5,3,.82);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.installModal.open{display:flex}
+.installBox{
+  width:100%;
+  max-width:420px;
+  background:linear-gradient(170deg,#1d1811,#100d09);
+  color:#fff;
+  border:1px solid var(--line-strong);
+  border-radius:22px;
+  padding:24px 20px;
+  text-align:center;
+  box-shadow:0 24px 60px rgba(0,0,0,.7);
+  position:relative;
+}
+.installPreview{
+  width:72px;
+  height:72px;
+  border-radius:18px;
+  margin:0 auto 12px;
+  border:1.5px solid var(--gold);
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+  display:block;
+}
+.installBox h3{font-family:Georgia,serif;font-weight:400;font-size:21px;color:var(--gold2)}
+.installBox .stepBox{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-top:14px;text-align:left;font-size:12.5px;line-height:1.68;color:#ede4d0}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:calc(22px + var(--safe-b));
+  transform:translateX(-50%) translateY(20px);
+  background:linear-gradient(180deg,#eddcb4,#c9a86a);
+  color:#120e08;
+  padding:11px 22px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:800;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:200;
+  box-shadow:0 10px 30px rgba(0,0,0,.45);
+  white-space:nowrap;
+  max-width:92vw;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:640px){
+  .grid{grid-template-columns:1fr}
+  .row2{grid-template-columns:1fr}
+  .headerStat{display:none}
+  .btnAdd{padding:12px 15px}
+  .heroBar{padding:15px 16px}
+}
+@media(max-width:370px){
+  .headerIcon{width:34px;height:34px;min-width:34px;font-size:14px}
+  .headerLogo{width:36px;height:36px}
+  .headerTitle b{font-size:15.5px}
+}
+@media(min-width:641px) and (max-width:1023px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .main{padding-left:24px;padding-right:24px}
+}
+@media(min-width:1024px){
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .main{padding-left:30px;padding-right:30px}
+  .appHeader{padding-left:30px;padding-right:30px}
+  .card{padding:20px}
+}
+
+@media(orientation:landscape) and (max-height:540px){
+  #splash{
+    padding-top:calc(12px + var(--safe-t));
+    padding-bottom:calc(12px + var(--safe-b));
+  }
+  .splashCenter{
+    flex-direction:row;
+    max-width:760px;
+    gap:26px;
+    text-align:left;
+  }
+  .splashLogoWrap{width:112px;height:112px}
+  .splashTextCol{flex:1;min-width:0}
+  .splashKicker{margin-top:0;text-align:left}
+  .splashTitle{font-size:27px;margin-top:6px;text-align:left}
+  .splashDivider{margin:10px 0}
+  .splashSub{margin:0;text-align:left;font-size:13px}
+  .btnMasuk{margin-top:14px;max-width:300px;padding:12px 20px;font-size:14px}
+  .splashAudioHint{text-align:left;margin-top:8px}
+  .appHeader{padding-top:calc(8px + var(--safe-t));padding-bottom:8px}
+  .main{padding-top:12px}
+  .heroBar{padding:12px 16px;margin-bottom:12px}
+}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- HALAMAN PEMBUKA -->
+<section id="splash">
+  <div class="splashTop">
+    <div class="splashBrand">DEKA SONJAYA<b>MODERN SPIRITUAL</b></div>
+    <div class="splashTools">
+      <button class="iconBtn" type="button" onclick="installPWA()" title="Install Aplikasi">⬇</button>
+      <button class="iconBtn" id="audioBtnSplash" type="button" onclick="toggleAudio()" title="Putar / Jeda Tutorial Audio">🔊</button>
+      <button class="iconBtn" type="button" onclick="toggleFS()" title="Layar Penuh">⛶</button>
+    </div>
+  </div>
+
+  <div class="splashCenter">
+    <div class="splashLogoWrap">
+      <div class="splashLogoFallback">📚</div>
+      <img src="logo.png" class="splashLogo" alt="Logo Lemari Buku Digital" onerror="handleLogoError(this)">
+    </div>
+    <div class="splashTextCol">
+      <div class="splashKicker">LEMARI BUKU DIGITAL</div>
+      <h1 class="splashTitle">Khazanah Ilmu &amp;<br><b>Pustaka Tautan Pilihan</b></h1>
+      <div class="splashDivider"></div>
+      <p class="splashSub">Himpunan karya tulis, kajian spiritual, dan referensi digital yang tertata rapi untuk memudahkan akses belajar kapan saja.</p>
+      <button class="btnMasuk" type="button" onclick="masukApp()">Masuk ke Lemari Buku →</button>
+      <p class="splashAudioHint">🔊 Klik ikon speaker untuk panduan audio</p>
+    </div>
+  </div>
+
+  <div class="splashFooter">DEKA SONJAYA • <b>MODERN SPIRITUAL</b></div>
+</section>
+
+<!-- HALAMAN UTAMA -->
+<div id="app">
+<header class="appHeader"><div class="headerInner">
+<img src="logo.png" class="headerLogo" alt="Logo" onclick="bukaSampul()" title="Kembali ke Halaman Pembuka" onerror="handleLogoError(this)">
+<div class="headerTitle"><b>Lemari Buku Digital</b><span>DEKA SONJAYA • MODERN SPIRITUAL</span></div>
+<div class="headerStat">📚 <b id="statTotal">0</b> &nbsp;•&nbsp; 📌 <b id="statPin">0</b></div>
+<button class="headerIcon" type="button" onclick="bukaSampul()" title="Halaman Pembuka">🏠</button>
+<button class="headerIcon" type="button" onclick="installPWA()" title="Install Aplikasi">⬇</button>
+<button class="headerIcon" id="audioBtnMain" type="button" onclick="toggleAudio()" title="Putar / Jeda Tutorial Audio">🔊</button>
+<button class="headerIcon" type="button" onclick="toggleFS()" title="Layar Penuh">⛶</button>
+</div></header>
+
+<main class="main">
+<div class="heroBar">
+  <div class="heroBarText">
+    <div class="eyebrow">KOLEKSI &amp; REFERENSI DIGITAL</div>
+    <h2>Pustaka Pribadi <b>Modern Spiritual</b></h2>
+    <p>Kelola, sematkan, dan akses seluruh tautan kitab serta materi kajian dalam satu ruang eksklusif.</p>
+  </div>
+</div>
+
+<div class="toolbar">
+<div class="searchWrap"><span>🔍</span><input id="search" placeholder="Cari judul kitab, kajian, atau keterangan..."></div>
+<button class="btnAdd" type="button" onclick="toggleForm()">＋ Tambah Link</button>
+</div>
+<div class="chips" id="chips"></div>
+
+<div class="form" id="formBox">
+<h3>＋ Tambah Koleksi Link Baru</h3>
+<p>Tempel tautan aplikasi atau kajian, lalu beri judul dan kategori agar tersusun rapi di lemari.</p>
+<label>JUDUL / NAMA APLIKASI *</label>
+<input id="inJudul" placeholder="Contoh: Seri Kitab - Kitab Tauhid">
+<div class="row2">
+<div><label>KATEGORI *</label>
+<select id="inKat">
+<option value="Seri Kitab">📖 Seri Kitab</option>
+<option value="Tauhid & Makrifat">🕌 Tauhid &amp; Makrifat</option>
+<option value="ESQ, Rezeki dan Refleksi">🌟 ESQ, Rezeki dan Refleksi</option>
+<option value="Lain-lain">✨ Lain-lain</option>
+</select></div>
+<div><label>LINK APLIKASI *</label>
+<input id="inLink" placeholder="https://... tempel di sini" inputmode="url"></div>
+</div>
+<label>KETERANGAN SINGKAT (OPSIONAL)</label>
+<textarea id="inDesc" placeholder="Contoh: Untuk dibaca tiap pagi, bab 1-3."></textarea>
+<div class="formBtns">
+<button class="btnPrimary" type="button" onclick="simpanLink()">Simpan ke Lemari ✓</button>
+<button class="btnGhost" type="button" onclick="toggleForm(false)">Batal</button>
+</div>
+</div>
+
+<div id="grid" class="grid"></div>
+<div id="empty" class="empty" style="display:none">
+<h3 id="emptyTitle">Lemari Pustaka Masih Kosong</h3>
+<p id="emptyText">Belum ada tautan yang tersimpan di perangkat ini.<br>Klik <b>＋ Tambah Link</b> di atas untuk menyimpan koleksi pertama Anda.</p>
+<button class="btnPrimary" type="button" onclick="toggleForm(true);window.scrollTo({top:0,behavior:'smooth'})" style="margin-top:16px;padding:12px 24px">＋ Tambah Link Pertama</button>
+</div>
+
+<footer class="footer"><b>Lemari Buku Digital</b> • Khazanah Ilmu &amp; Pustaka Tautan Pilihan<br>Seluruh tautan tersimpan aman pada masing-masing perangkat.<br>Deka Sonjaya • Modern Spiritual</footer>
+</main>
+</div>
+
+<!-- MODAL PANDUAN INSTALL -->
+<div class="installModal" id="installModal" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="installBox">
+    <img id="installIconPreview" class="installPreview" src="" alt="Ikon Aplikasi">
+    <h3>Install Lemari Buku Digital</h3>
+    <div class="stepBox">
+      <b style="color:var(--gold2)">📱 iPhone / iPad (Safari):</b><br>
+      Tekan ikon <b>Bagikan (Share)</b> di bagian bawah layar → pilih <b>"Tambah ke Layar Utama" (Add to Home Screen)</b>.<br><br>
+      <b style="color:var(--gold2)">🤖 Android / 💻 Laptop (Chrome / Edge):</b><br>
+      Tekan menu titik tiga <b>(⋮)</b> di pojok kanan atas → pilih <b>"Install Aplikasi"</b> atau <b>"Tambahkan ke Layar Utama"</b>.
+    </div>
+    <button class="btnMasuk" type="button" onclick="document.getElementById('installModal').classList.remove('open')" style="margin-top:18px;padding:12px">Mengerti</button>
+  </div>
+</div>
+
+<audio id="audioTutorial" preload="metadata" style="display:none"><source src="tutorial.mp3" type="audio/mpeg"></audio>
+<div class="toast" id="toast">Tersimpan ✓</div>
+
+<script>
+/* =========================================================
+   IDENTITAS IKON UNIK APLIKASI (UBAH DI SINI UNTUK TIAP APP)
+   ========================================================= */
+var APP_ICON_CONFIG = {
+  name: 'Lemari Buku Digital',
+  shortName: 'Lemari Buku',
+  tag: 'PUSTAKA DIGITAL',
+  monogram: 'LB',        // Inisial unik bila logo.png tidak ada (misal: 'CQ', 'KL', 'AL', 'ESQ')
+  bgStart: '#2b2112',    // Warna gradien atas ikon
+  bgEnd: '#0b0906',      // Warna gradien bawah ikon
+  accent: '#e8d5a8'      // Warna bingkai & aksen emas
+};
+
+try{
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.getRegistrations().then(function(regs){
+      regs.forEach(function(r){ r.unregister(); });
+    });
+  }
+}catch(e){}
+
+function handleLogoError(img){
+  if(!img.dataset.triedCap){
+    img.dataset.triedCap = '1';
+    img.src = 'Logo.png';
+  } else {
+    img.style.display = 'none';
+  }
+}
+
+/* =========================================================
+   GENERATOR IKON PNG ASLI (512x512 & 192x192) UNTUK HOME SCREEN
+   ========================================================= */
+function renderAppIconPNG(size, logoImg){
+  var c = document.createElement('canvas');
+  c.width = size;
+  c.height = size;
+  var ctx = c.getContext('2d');
+  var r = size * 0.22;
+
+  // Latar belakang gradien mewah
+  var grad = ctx.createRadialGradient(size*0.5, size*0.28, size*0.05, size*0.5, size*0.5, size*0.75);
+  grad.addColorStop(0, APP_ICON_CONFIG.bgStart);
+  grad.addColorStop(1, APP_ICON_CONFIG.bgEnd);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, size, size);
+
+  // Bingkai ganda emas
+  var pad = size * 0.055;
+  ctx.strokeStyle = 'rgba(201,168,106,0.55)';
+  ctx.lineWidth = Math.max(2, size * 0.012);
+  ctx.beginPath();
+  ctx.roundRect(pad, pad, size - pad*2, size - pad*2, r * 0.78);
+  ctx.stroke();
+
+  var pad2 = size * 0.082;
+  ctx.strokeStyle = 'rgba(232,213,168,0.22)';
+  ctx.lineWidth = Math.max(1, size * 0.005);
+  ctx.beginPath();
+  ctx.roundRect(pad2, pad2, size - pad2*2, size - pad2*2, r * 0.65);
+  ctx.stroke();
+
+  var cx = size * 0.5;
+  var cy = size * 0.44;
+  var radius = size * 0.25;
+
+  // Lingkaran medali emas
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.fillStyle = '#14100a';
+  ctx.fill();
+  ctx.lineWidth = Math.max(2, size * 0.014);
+  ctx.strokeStyle = APP_ICON_CONFIG.accent;
+  ctx.stroke();
+
+  if(logoImg){
+    ctx.clip();
+    ctx.drawImage(logoImg, cx - radius, cy - radius, radius * 2, radius * 2);
+  } else {
+    ctx.fillStyle = APP_ICON_CONFIG.accent;
+    ctx.font = 'bold ' + Math.round(size * 0.21) + 'px Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(APP_ICON_CONFIG.monogram, cx, cy + size * 0.01);
+  }
+  ctx.restore();
+
+  // Label aplikasi di bagian bawah ikon agar mudah dibedakan di layar utama
+  ctx.fillStyle = APP_ICON_CONFIG.accent;
+  ctx.font = 'bold ' + Math.round(size * 0.068) + 'px system-ui, -apple-system, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(APP_ICON_CONFIG.tag, cx, size * 0.81);
+
+  return c.toDataURL('image/png');
+}
+
+function applyGeneratedIcons(png512, png192){
+  var ati = document.getElementById('appleTouchIcon');
+  var fav = document.getElementById('appFavicon');
+  var prev = document.getElementById('installIconPreview');
+  if(ati) ati.setAttribute('href', png512);
+  if(fav) fav.setAttribute('href', png192);
+  if(prev) prev.setAttribute('src', png512);
+
+  var manifestObj = {
+    name: APP_ICON_CONFIG.name,
+    short_name: APP_ICON_CONFIG.shortName,
+    description: APP_ICON_CONFIG.name + ' - Deka Sonjaya Modern Spiritual',
+    start_url: location.href.split('#')[0],
+    scope: './',
+    display: 'standalone',
+    orientation: 'any',
+    background_color: APP_ICON_CONFIG.bgEnd,
+    theme_color: APP_ICON_CONFIG.bgEnd,
+    icons: [
+      { src: png192, sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: png512, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+    ]
+  };
+  var mLink = document.getElementById('pwaManifest');
+  if(mLink){
+    mLink.setAttribute('href', 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifestObj)));
+  }
+}
+
+function setupPWA(){
+  try{
+    // Render awal instan (tanpa menunggu gambar)
+    var init512 = renderAppIconPNG(512, null);
+    var init192 = renderAppIconPNG(192, null);
+    applyGeneratedIcons(init512, init192);
+
+    // Jika logo.png / Logo.png tersedia, perbarui ikon PNG dengan logo asli di dalamnya
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function(){
+      try{
+        applyGeneratedIcons(renderAppIconPNG(512, img), renderAppIconPNG(192, img));
+      }catch(e){}
+    };
+    img.onerror = function(){
+      if(!img.dataset.triedCap){
+        img.dataset.triedCap = '1';
+        img.src = 'Logo.png';
+      }
+    };
+    img.src = 'logo.png';
+  }catch(e){}
+}
+
+/* FULLSCREEN & CROSS-DEVICE PWA INSTALL */
+var deferredPrompt = null;
+
+function isFullscreenActive(){
+  return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+}
+function goFullscreen(){
+  try{
+    if(isFullscreenActive()) return;
+    var el = document.documentElement;
+    if(el.requestFullscreen){ el.requestFullscreen({navigationUI:'hide'}).catch(function(){}); }
+    else if(el.webkitRequestFullscreen){ el.webkitRequestFullscreen(); }
+    else if(el.msRequestFullscreen){ el.msRequestFullscreen(); }
+  }catch(e){}
+}
+function toggleFS(){
+  try{
+    if(!isFullscreenActive()){
+      goFullscreen();
+    } else {
+      if(document.exitFullscreen){ document.exitFullscreen().catch(function(){}); }
+      else if(document.webkitExitFullscreen){ document.webkitExitFullscreen(); }
+      else if(document.msExitFullscreen){ document.msExitFullscreen(); }
+    }
+  }catch(e){}
+}
+
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+window.addEventListener('appinstalled', function(){
+  deferredPrompt = null;
+  showToast('Aplikasi berhasil diinstall ✓');
+});
+
+function installPWA(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(){
+      deferredPrompt = null;
+    }).catch(function(){});
+  } else {
+    document.getElementById('installModal').classList.add('open');
+  }
+}
+
+/* NAVIGASI SAMPUL <-> HALAMAN UTAMA */
+function masukApp(){
+  goFullscreen();
+  var splash = document.getElementById('splash');
+  var app = document.getElementById('app');
+  splash.classList.add('hide');
+  app.classList.add('show');
+  setTimeout(function(){ splash.style.display = 'none'; }, 380);
+  window.scrollTo(0, 0);
+}
+
+function bukaSampul(){
+  var splash = document.getElementById('splash');
+  var app = document.getElementById('app');
+  splash.style.display = 'flex';
+  requestAnimationFrame(function(){
+    splash.classList.remove('hide');
+  });
+  setTimeout(function(){ app.classList.remove('show'); }, 200);
+}
+
+function toggleAudio(){
+  goFullscreen();
+  var a = document.getElementById('audioTutorial');
+  if(!a) return;
+  try{
+    if(a.paused){
+      a.play().catch(function(){
+        showToast('File tutorial.mp3 belum ditemukan');
+      });
+    } else {
+      a.pause();
+    }
+  }catch(e){}
+  var btns = document.querySelectorAll('#audioBtnSplash,#audioBtnMain');
+  btns.forEach(function(b){
+    if(a.paused) b.classList.remove('playing');
+    else b.classList.add('playing');
+  });
+}
+
+document.getElementById('audioTutorial').addEventListener('ended', function(){
+  document.querySelectorAll('#audioBtnSplash,#audioBtnMain').forEach(function(b){
+    b.classList.remove('playing');
+  });
+});
+
+function toggleForm(force){
+  var f = document.getElementById('formBox');
+  if(force === true) f.classList.add('open');
+  else if(force === false) f.classList.remove('open');
+  else f.classList.toggle('open');
+  if(f.classList.contains('open')) setTimeout(function(){ document.getElementById('inJudul').focus(); }, 100);
+}
+
+function showToast(t){
+  var el = document.getElementById('toast');
+  el.textContent = t;
+  el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); }, 2200);
+}
+
+/* DATA & LOGIKA RAK BUKU */
+var KEY='lemari_buku_digital_v2';
+var KATS=['Semua','📌 Disematkan','📖 Seri Kitab','🕌 Tauhid & Makrifat','🌟 ESQ, Rezeki dan Refleksi','✨ Lain-lain'];
+var katAktif='Semua'; var keyword='';
+
+function load(){ try{ var d=JSON.parse(localStorage.getItem(KEY)||'[]'); return Array.isArray(d)?d:[]; }catch(e){ return []; } }
+function save(d){ try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch(e){} }
+function domainOf(u){ try{ return new URL(u).hostname.replace('www.',''); }catch(e){ return u; } }
+function katBersih(k){ return k.replace(/^[^A-Za-z]+/,'').trim(); }
+function badgeClass(kat){ if(kat==='Seri Kitab') return 'kitab'; if(kat==='Tauhid & Makrifat') return 'tauhid'; if(kat==='ESQ, Rezeki dan Refleksi') return 'esq'; return 'lain'; }
+function emojiFor(kat){ if(kat==='Seri Kitab') return '📖'; if(kat==='Tauhid & Makrifat') return '🕌'; if(kat==='ESQ, Rezeki dan Refleksi') return '🌟'; return '✨'; }
+
+function seed(){
+  var d=load();
+  if(d.length>0) return d;
+  var contoh=[
+    {judul:'Seri Kitab - Contoh Kitab 1', link:'https://example.com/seri-kitab-1', kat:'Seri Kitab', desc:'Contoh awal. Hapus dan ganti dengan link kitab asli kamu.', pin:true, at:Date.now()},
+    {judul:'Tauhid & Makrifat - Kajian Pembuka', link:'https://example.com/tauhid', kat:'Tauhid & Makrifat', desc:'Kajian pembuka tauhid & makrifat pilihan.', pin:false, at:Date.now()-1},
+    {judul:'ESQ, Rezeki dan Refleksi - Materi Dasar', link:'https://example.com/esq-rezeki', kat:'ESQ, Rezeki dan Refleksi', desc:'Materi ESQ, rezeki & refleksi harian.', pin:false, at:Date.now()-2},
+  ];
+  save(contoh);
+  return contoh;
+}
+
+function simpanLink(){
+  var judul=document.getElementById('inJudul').value.trim();
+  var link=document.getElementById('inLink').value.trim();
+  var kat=document.getElementById('inKat').value;
+  var desc=document.getElementById('inDesc').value.trim();
+  if(!judul){ alert('Isi judulnya dulu ya'); return; }
+  if(!link){ alert('Tempel link-nya dulu ya'); return; }
+  if(!link.startsWith('http')) link='https://'+link;
+  try{ new URL(link); }catch(e){ alert('Link-nya belum benar. Contoh: https://example.com'); return; }
+  var d=load(); d.unshift({judul:judul,link:link,kat:kat,desc:desc,pin:false,at:Date.now()}); save(d);
+  document.getElementById('inJudul').value=''; document.getElementById('inLink').value=''; document.getElementById('inDesc').value='';
+  toggleForm(false); renderChips(); render(); showToast('Tersimpan ke Lemari ✓');
+}
+
+function hapusLink(i){
+  var d=load(); var it=d[i]; if(!it) return;
+  if(!confirm('Hapus "'+it.judul+'" dari lemari?')) return;
+  d.splice(i,1); save(d); renderChips(); render(); showToast('Dihapus');
+}
+
+function pinLink(i){
+  var d=load(); if(!d[i]) return;
+  d[i].pin=!d[i].pin; save(d); renderChips(); render();
+  showToast(d[i].pin?'Disematkan 📌':'Lepas sematan');
+}
+
+function salinLink(link){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(link).then(function(){ showToast('Link tersalin ✓'); });
+  } else {
+    var ta=document.createElement('textarea'); ta.value=link; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); showToast('Link tersalin ✓'); }catch(e){}
+    ta.remove();
+  }
+}
+
+function renderChips(){
+  var box=document.getElementById('chips'); box.innerHTML=''; var all=load();
+  KATS.forEach(function(k){
+    var count=all.length;
+    if(k!=='Semua' && k!=='📌 Disematkan'){ var kb=katBersih(k); count=all.filter(function(x){return x.kat===kb}).length; }
+    if(k==='📌 Disematkan') count=all.filter(function(x){return x.pin}).length;
+    var b=document.createElement('button');
+    b.className='chip'+(katAktif===k?' on':'');
+    b.innerHTML=k+' <small>'+count+'</small>';
+    b.onclick=function(){ katAktif=k; renderChips(); render(); };
+    box.appendChild(b);
+  });
+}
+
+function render(){
+  var all=load();
+  document.getElementById('statTotal').textContent=all.length;
+  document.getElementById('statPin').textContent=all.filter(function(x){return x.pin}).length;
+  var list=all.map(function(item,idx){ return {item:item,idx:idx}; });
+  list.sort(function(a,b){ if(a.item.pin!==b.item.pin) return a.item.pin?-1:1; return (b.item.at||0)-(a.item.at||0); });
+  if(katAktif==='📌 Disematkan') list=list.filter(function(x){return x.item.pin});
+  else if(katAktif!=='Semua'){ var kb=katBersih(katAktif); list=list.filter(function(x){return x.item.kat===kb}); }
+  if(keyword){ var kw=keyword.toLowerCase(); list=list.filter(function(x){ return (x.item.judul+' '+x.item.desc+' '+x.item.kat+' '+x.item.link).toLowerCase().includes(kw); }); }
+  var grid=document.getElementById('grid'); grid.innerHTML='';
+  var empty=document.getElementById('empty'); var eT=document.getElementById('emptyTitle'); var eX=document.getElementById('emptyText');
+  if(all.length===0){ grid.style.display='none'; empty.style.display='block'; eT.textContent='Lemari Pustaka Masih Kosong'; eX.innerHTML='Belum ada tautan yang tersimpan di perangkat ini.<br>Klik <b>＋ Tambah Link</b> di atas untuk menyimpan koleksi pertama Anda.'; return; }
+  if(list.length===0){ grid.style.display='none'; empty.style.display='block'; eT.textContent='Tidak Ditemukan'; eX.innerHTML='Coba kata kunci lain atau pilih kategori berbeda.<br>Atau tambahkan tautan baru melalui tombol di atas.'; return; }
+  grid.style.display='grid'; empty.style.display='none';
+  list.forEach(function(o){
+    var it=o.item; var dom=domainOf(it.link);
+    var card=document.createElement('div'); card.className='card'+(it.pin?' pinned':'');
+    var fav='https://www.google.com/s2/favicons?domain='+dom+'&sz=64';
+    card.innerHTML='<div class="cardTop"><div class="fav"><img src="'+fav+'" onerror="this.parentElement.innerHTML=\'<span>'+emojiFor(it.kat)+'</span>\'"></div><div style="min-width:0"><h3><a href="'+it.link+'" target="_blank" rel="noopener">'+it.judul+'</a></h3><div class="domain">'+dom+'</div></div></div><span class="badge '+badgeClass(it.kat)+'">'+emojiFor(it.kat)+' '+it.kat+'</span>'+(it.desc?'<div class="desc">'+it.desc+'</div>':'<div class="desc" style="color:#7e725c">Tidak ada keterangan.</div>')+'<div class="actions"><a class="act open" href="'+it.link+'" target="_blank" rel="noopener">Buka ↗</a><button class="act copy" type="button">Salin</button><button class="actIcon" type="button" title="Sematkan">📌</button><button class="actIcon" type="button" title="Hapus">🗑️</button></div>';
+    var btns=card.querySelectorAll('button');
+    btns[0].onclick=function(){ salinLink(it.link); };
+    btns[1].onclick=function(){ pinLink(o.idx); };
+    btns[2].onclick=function(){ hapusLink(o.idx); };
+    grid.appendChild(card);
+  });
+}
+
+setupPWA();
+document.getElementById('search').addEventListener('input', function(e){ keyword=e.target.value.trim(); render(); });
+seed(); renderChips(); render();
+</script>
+</body>
+</html>
